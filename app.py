@@ -38,4 +38,5 @@ def capture() :
 
 
 if __name__ == '__main__' :
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    threading.Thread(target=escuchar_lora, args=(socketio,), daemon=True).start()
+    socketio.run(app, host='0.0.0.0', port=5000)
