@@ -14,7 +14,7 @@ def take_photo() :
     filepath = os.path.join(PHOTO_DIR, filename)
 
     # Usa libcamera si estás en Bullseye o superior
-    os.system(f"libcamera-jpeg -o {filepath} --width 640 --height 480 --nopreview")
+    os.system(f"raspistill -o {filepath} --width 640 --height 480 --nopreview")
 
     return filename
 
@@ -34,6 +34,24 @@ def index() :
 @app.route('/capture')
 def capture() :
     take_photo()
+    return redirect(url_for('index'))
+
+
+@app.route('/analyze')
+def analyze():
+    photos = get_photos()
+    if not photos:
+        return redirect(url_for('index'))
+
+    last = os.path.join(PHOTO_DIR, photos[0])
+    output = os.path.join(PHOTO_DIR, 'processed.jpg')
+
+    # Cargar y procesar
+    img = cv2.imread(last)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, 50, 150)
+
+    cv2.imwrite(output, edges)
     return redirect(url_for('index'))
 
 

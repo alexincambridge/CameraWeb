@@ -25,6 +25,13 @@
       </div>
       {% endfor %}
     </div>
+    {% if last_photo %}
+<h4>Resultado procesado (Canny)</h4>
+<img src="{{ url_for('static', filename='photos/processed.jpg') }}" class="img-fluid mb-4" alt="Procesado">
+{% endif %}
+
+<a href="/analyze" class="btn btn-warning">Analizar Última Foto</a>
+
   </div>
 </body>
 </html>
