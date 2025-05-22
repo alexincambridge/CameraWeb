@@ -37,6 +37,9 @@ def capture() :
     return redirect(url_for('index'))
 
 
-if __name__ == '__main__' :
-    threading.Thread(target=escuchar_lora, args=(socketio,), daemon=True).start()
-    socketio.run(app, host='0.0.0.0', port=5000)
+import socket
+
+if __name__ == '__main__':
+    ip = socket.gethostbyname(socket.gethostname())
+    print(f"Servidor disponible en: http://{ip}:5000")
+    app.run(host='0.0.0.0', port=5000, debug=False)
