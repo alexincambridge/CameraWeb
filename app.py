@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, Response
 import os
 from datetime import datetime
 import cv2
@@ -16,7 +16,7 @@ face_cascade = cv2.CascadeClassifier(CASCADE_PATH)
 def take_photo():
     filename = datetime.now().strftime("%Y%m%d_%H%M%S.jpg")
     filepath = os.path.join(PHOTO_DIR, filename)
-    os.system(f"libcamera-still -o {filepath} --width 640 --height 480 --nopreview")
+    os.system(f"raspistill -o {filepath} --width 640 --height 480 --nopreview")
     return filename
 
 def get_photos():
@@ -74,6 +74,43 @@ def delete_all():
         except Exception as e:
             print(f"Error al eliminar {file}: {e}")
     return redirect(url_for('index'))
+
+
+# Abrir cámara (índice 0 puede variar en Raspberry Pi)
+camera = cv2.VideoCapture(0)
+
+def generate_frames():
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+
+        # Convertir a escala de grises
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # Detectar rostros
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+
+        # Dibujar rectángulos
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        # Codificar como JPEG
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+
+        # Enviar frame como parte del stream
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/video')
+def video():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == '__main__':
     ip = socket.gethostbyname(socket.gethostname())
