@@ -10,7 +10,7 @@ PHOTO_DIR = 'static/photos'
 os.makedirs(PHOTO_DIR, exist_ok=True)
 
 # Ruta del clasificador Haar para detección de rostros
-CASCADE_PATH = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+CASCADE_PATH = 'models/haarcascade_frontalface_default.xml'
 face_cascade = cv2.CascadeClassifier(CASCADE_PATH)
 
 def take_photo():
