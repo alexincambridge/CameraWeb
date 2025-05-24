@@ -2,22 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Raspberry Pi - Cámara</title>
+    <title>Raspberry Pi Cam</title>
 </head>
 <body>
-    <h1>Detección de Rostros en Tiempo Real</h1>
+    <h1>Captura y Análisis de Imágenes</h1>
 
-    <p><strong>Video en vivo con detección de rostros:</strong></p>
-    <img src="{{ url_for('video_feed') }}" width="640" alt="stream de cámara">
+    <a href="{{ url_for('capture') }}">📸 Capturar nueva foto</a> |
+    <a href="{{ url_for('analyze') }}">🔍 Analizar imagen (detectar rostros)</a> |
+    <a href="{{ url_for('delete_all') }}" onclick="return confirm('¿Eliminar todas las fotos?');">🗑️ Borrar todas las fotos</a>
 
     <hr>
 
-    <p>Opciones adicionales:</p>
-    <ul>
-        <li><a href="{{ url_for('video_feed') }}">🔴 Ver solo video</a></li>
-        <li><a href="/capture">📸 Capturar foto (si usas ese modo también)</a></li>
-        <li><a href="/analyze">🔍 Analizar última foto</a></li>
-        <li><a href="/delete_all">🗑️ Borrar todas las fotos</a></li>
-    </ul>
+    {% if last_photo %}
+        <h2>Última foto:</h2>
+        <img src="{{ url_for('static', filename='photos/' + last_photo) }}" width="400">
+    {% else %}
+        <p>No hay fotos todavía.</p>
+    {% endif %}
+
+    {% if processed_photo %}
+        <h2>Última imagen procesada:</h2>
+        <img src="{{ url_for('static', filename='photos/' + processed_photo) }}" width="400">
+    {% endif %}
 </body>
 </html>
