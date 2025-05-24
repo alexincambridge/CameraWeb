@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Raspberry Pi - Cámara</title>
+</head>
+<body>
+    <h1>Detección de Rostros en Tiempo Real</h1>
+
+    <p><strong>Video en vivo con detección de rostros:</strong></p>
+    <img src="{{ url_for('video_feed') }}" width="640" alt="stream de cámara">
+
+    <hr>
+
+    <p>Opciones adicionales:</p>
+    <ul>
+        <li><a href="{{ url_for('video_feed') }}">🔴 Ver solo video</a></li>
+        <li><a href="/capture">📸 Capturar foto (si usas ese modo también)</a></li>
+        <li><a href="/analyze">🔍 Analizar última foto</a></li>
+        <li><a href="/delete_all">🗑️ Borrar todas las fotos</a></li>
+    </ul>
+</body>
+</html>
