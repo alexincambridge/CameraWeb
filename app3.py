@@ -6,8 +6,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Ruta de modelo Haar Cascade
-CASCADE_PATH = 'models/haarcascade_frontalface_default.xml'
-face_cascade = cv2.CascadeClassifier(CASCADE_PATH)
+face_cascade = cv2.CascadeClassifier('models/haarcascade_frontalface_default.xml')
 
 # Crear carpeta de videos si no existe
 VIDEO_DIR = 'static/videos'
@@ -55,7 +54,7 @@ def generate_frames():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index3.html')
 
 @app.route('/video_feed')
 def video_feed():
